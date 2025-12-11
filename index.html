@@ -44,9 +44,6 @@
                     boxShadow: {
                         'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
                         'hover': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
-                    },
-                    animation: {
-                        'spin-slow': 'spin 3s linear infinite',
                     }
                 }
             }
@@ -74,18 +71,10 @@
         const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
 
         const COLORS = { primary: '#002e60', secondary: '#004289', accent: '#C6D200', orange: '#D3641A', success: '#059669', danger: '#dc2626', grid: '#e2e8f0' };
-        
-        // URL OneDrive (Modifiée pour forcer le téléchargement et éviter l'interface web)
-        const ONEDRIVE_URL = "https://vincienergies-my.sharepoint.com/:x:/r/personal/mohamed_mostefaoui_vinci-energies_net/Documents/Suivi%20des%20devis/data.xlsx?d=wdb6c8747cdfc4efdad42181f63b7b428&csf=1&web=0&download=1";
 
         const formatCurrency = (value, decimals = 0) => {
             if (value === undefined || value === null) return '-';
             return value.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: decimals });
-        };
-
-        const formatDate = (date) => {
-            if (!date) return '-';
-            return new Date(date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date(date).toLocaleDateString('fr-FR');
         };
 
         // --- HOOKS OPTIMISÉS ---
@@ -169,10 +158,7 @@
             PieChart: (p) => <Icon {...p}><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></Icon>,
             Package: (p) => <Icon {...p}><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></Icon>,
             ShoppingCart: (p) => <Icon {...p}><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></Icon>,
-            Target: (p) => <Icon {...p}><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></Icon>,
-            RefreshCw: (p) => <Icon {...p}><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></Icon>,
-            Loader: (p) => <Icon {...p}><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></Icon>,
-            CloudOff: (p) => <Icon {...p}><path d="M22.61 16.95A5 5 0 0 0 18 10h-1.26a8 8 0 0 0-7.05-6M5 5a8 8 0 0 0 4 7h.5"/><path d="M1 1l22 22"/></Icon>
+            Target: (p) => <Icon {...p}><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></Icon>
         };
 
         const Card = memo(({ children, className = "" }) => (
@@ -328,9 +314,15 @@
 
             if (data.length === 0) return (
                 <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-white rounded-xl border border-dashed border-slate-300">
-                    <Icons.Search className="w-10 h-10 text-slate-400 mb-4" />
-                    <h3 className="text-xl font-bold text-actemium-primary mb-2">Aucune donnée trouvée</h3>
-                    <p className="text-sm text-slate-400 mb-4 max-w-sm">Si la synchronisation OneDrive échoue, utilisez l'import manuel dans le menu.</p>
+                    <Icons.Upload className="w-12 h-12 text-slate-300 mb-4" />
+                    <h3 className="text-xl font-bold text-actemium-primary mb-2">Tableau de bord vide</h3>
+                    <p className="text-sm text-slate-400 mb-6 max-w-sm">Veuillez importer votre fichier de suivi Excel pour visualiser les données.</p>
+                    <button 
+                        onClick={() => document.querySelector('input[type="file"]').click()}
+                        className="flex items-center gap-2 px-6 py-3 bg-actemium-secondary text-white rounded-xl hover:bg-blue-600 transition-all shadow-lg font-bold"
+                    >
+                        <Icons.Upload className="w-5 h-5" /> Importer le fichier
+                    </button>
                 </div>
             );
 
@@ -600,7 +592,7 @@
                         <table className="w-full text-xs border-separate border-spacing-y-2">
                             <thead>
                                 <tr>
-                                    <th className="text-left text-slate-400 uppercase font-bold tracking-wider w-40 pb-2 pl-2">Devis</th>
+                                    <th className="text-left text-slate-400 uppercase font-bold tracking-wider w-56 pb-2 pl-2">Devis</th>
                                     {sections.map(s => <th key={s} className="text-center text-slate-400 uppercase font-bold tracking-wider pb-2">S{s}</th>)}
                                 </tr>
                             </thead>
@@ -612,7 +604,6 @@
                                             onClick={() => onRowClick(d.id)}
                                             title="Voir le détail en bas"
                                         >
-                                            <Icons.Search className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400"/>
                                             {d.devis}
                                         </td>
                                         {sections.map(s => {
@@ -713,7 +704,7 @@
                     <OperationsHeatmap data={currentData} onRowClick={scrollToCard} />
                     
                     {/* --- Pagination commune --- */}
-                    <Card className="p-4 bg-white border-slate-200 shadow-soft flex justify-between items-center sticky top-[80px] z-10">
+                    <Card className="p-4 bg-white border-slate-200 shadow-soft flex justify-between items-center">
                          <span className="text-actemium-primary font-bold text-sm">Affichage : {currentPage} / {maxPage} (25 par page)</span>
                          <div className="flex gap-2">
                             <button onClick={prev} disabled={currentPage === 1} className="p-2 hover:bg-slate-100 rounded border border-slate-200 disabled:opacity-50 transition-colors"><Icons.ChevronLeft className="w-4 h-4 text-slate-600"/></button>
@@ -764,6 +755,7 @@
 
         const MultiSelect = memo(({ label, options, selected, onChange }) => {
             const [isOpen, setIsOpen] = useState(false);
+            const [searchTerm, setSearchTerm] = useState("");
             const wrapperRef = useRef(null);
             
             useEffect(() => {
@@ -774,29 +766,54 @@
                 return () => document.removeEventListener("mousedown", handleClickOutside);
             }, [wrapperRef]);
 
+            useEffect(() => {
+                if (!isOpen) setSearchTerm("");
+            }, [isOpen]);
+
             const toggleOption = (val) => {
                 const newSelected = selected.includes(val) ? selected.filter(s => s !== val) : [...selected, val];
                 onChange(newSelected);
             };
 
+            const filteredOptions = options.filter(opt => 
+                opt.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
             return (
-                <div className="relative mb-4" ref={wrapperRef}>
+                <div className="relative" ref={wrapperRef}>
                     <label className="text-[10px] font-bold text-blue-200 uppercase mb-1.5 block tracking-wider opacity-80">{label}</label>
                     <button onClick={() => setIsOpen(!isOpen)} className="w-full bg-blue-900/40 border border-blue-400/30 rounded-lg p-2.5 text-sm text-white text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-actemium-accent/50 hover:bg-blue-900/60 transition-colors">
                         <span className="truncate pr-2 font-medium">{selected.length === 0 ? "Tous" : selected.length === 1 ? selected[0] : `${selected.length} sélectionnés`}</span>
                         <Icons.ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''} text-actemium-accent`} />
                     </button>
                     {isOpen && (
-                        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg shadow-xl max-h-60 overflow-y-auto border border-slate-100 py-1">
-                            <div className="px-3 py-2 hover:bg-slate-50 cursor-pointer text-slate-500 text-xs font-bold border-b border-slate-50 uppercase tracking-wider" onClick={() => { onChange([]); setIsOpen(false); }}>Tout effacer</div>
-                            {options.map(opt => (
-                                <div key={opt} className="px-3 py-2.5 hover:bg-slate-50 cursor-pointer flex items-center gap-3" onClick={() => toggleOption(opt)}>
-                                    <div className={`w-5 h-5 border rounded flex-shrink-0 flex items-center justify-center ${selected.includes(opt) ? 'bg-actemium-secondary border-actemium-secondary' : 'border-slate-300 bg-white'}`}>
-                                        {selected.includes(opt) && <Icons.Check className="text-white w-3.5 h-3.5" />}
-                                    </div>
-                                    <span className={`text-sm truncate ${selected.includes(opt) ? 'text-actemium-primary font-semibold' : 'text-slate-600'}`}>{opt}</span>
+                        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg shadow-xl max-h-60 overflow-hidden border border-slate-100 flex flex-col">
+                            <div className="p-2 border-b border-slate-50 bg-slate-50/50">
+                                <div className="relative">
+                                    <Icons.Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                                    <input 
+                                        type="text" 
+                                        placeholder="Rechercher..." 
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="w-full pl-8 pr-3 py-1.5 text-xs border border-slate-200 rounded-md focus:outline-none focus:border-actemium-secondary focus:ring-1 focus:ring-actemium-secondary/20"
+                                        autoFocus
+                                    />
                                 </div>
-                            ))}
+                            </div>
+                            <div className="overflow-y-auto flex-1">
+                                <div className="px-3 py-2 hover:bg-slate-50 cursor-pointer text-slate-500 text-xs font-bold border-b border-slate-50 uppercase tracking-wider" onClick={() => { onChange([]); setIsOpen(false); }}>Tout effacer</div>
+                                {filteredOptions.length > 0 ? filteredOptions.map(opt => (
+                                    <div key={opt} className="px-3 py-2.5 hover:bg-slate-50 cursor-pointer flex items-center gap-3" onClick={() => toggleOption(opt)}>
+                                        <div className={`w-5 h-5 border rounded flex-shrink-0 flex items-center justify-center ${selected.includes(opt) ? 'bg-actemium-secondary border-actemium-secondary' : 'border-slate-300 bg-white'}`}>
+                                            {selected.includes(opt) && <Icons.Check className="text-white w-3.5 h-3.5" />}
+                                        </div>
+                                        <span className={`text-sm truncate ${selected.includes(opt) ? 'text-actemium-primary font-semibold' : 'text-slate-600'}`}>{opt}</span>
+                                    </div>
+                                )) : (
+                                    <div className="px-3 py-4 text-center text-xs text-slate-400 italic">Aucun résultat</div>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>
@@ -819,9 +836,6 @@
 
         const Dashboard = () => {
             const [data, setData] = useState([]);
-            const [syncStatus, setSyncStatus] = useState('idle'); // idle, loading, success, error
-            const [lastSyncDate, setLastSyncDate] = useState(null);
-            
             const [view, setView] = useState('overview');
             const [yearFilter, setYearFilter] = useState('Tous');
             const [respFilter, setRespFilter] = useState([]);
@@ -831,62 +845,8 @@
             const [isFiltering, startTransition] = useTransition();
             const fileRef = useRef(null);
 
-            // --- FONCTION DE SYNCHRONISATION ONEDRIVE ---
-            const fetchOneDriveData = async () => {
-                setSyncStatus('loading');
-                setToast({ message: "Synchronisation OneDrive en cours...", type: 'info', visible: true });
-                
-                try {
-                    // Note Technique : Les navigateurs bloquent souvent les requêtes cross-origin (CORS) 
-                    // vers SharePoint depuis un fichier local ou un domaine tiers. 
-                    // Si le fetch échoue, l'utilisateur verra un message d'erreur et pourra utiliser l'import manuel.
-                    const response = await fetch(ONEDRIVE_URL, {
-                        method: 'GET',
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Erreur HTTP: ${response.status}`);
-                    }
-
-                    const blob = await response.blob();
-                    const reader = new FileReader();
-
-                    reader.onload = (e) => {
-                        try {
-                            const wb = XLSX.read(e.target.result, { type: 'binary' });
-                            const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-                            if (json.length) { 
-                                processData(json); 
-                                setSyncStatus('success');
-                                setLastSyncDate(new Date());
-                                setToast({message: `${json.length} lignes synchronisées avec succès !`, type: 'success', visible: true}); 
-                            } else {
-                                throw new Error("Fichier vide");
-                            }
-                        } catch (err) {
-                            console.error("Erreur parsing Excel:", err);
-                            setSyncStatus('error');
-                            setToast({message: "Erreur lecture fichier. Format invalide ?", type: 'error', visible: true});
-                        }
-                    };
-                    
-                    reader.readAsBinaryString(blob);
-
-                } catch (error) {
-                    console.error("Erreur Sync:", error);
-                    setSyncStatus('error');
-                    setToast({
-                        message: "Échec connexion OneDrive. Utilisez l'import manuel.", 
-                        type: 'error', 
-                        visible: true
-                    });
-                }
-            };
-
-            // Suppression de la persistance locale : Synchronisation au démarrage
+            // Effacement des données locales au démarrage
             useEffect(() => {
-                fetchOneDriveData();
-                // Suppression explicite des données locales si elles existaient auparavant
                 localStorage.removeItem('actemiumDashboardData');
             }, []);
 
@@ -919,9 +879,7 @@
                         const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
                         if (json.length) { 
                             processData(json); 
-                            setSyncStatus('success');
-                            setLastSyncDate(new Date());
-                            setToast({message: `${json.length} lignes importées manuellement !`, type: 'success', visible: true}); 
+                            setToast({message: `${json.length} lignes importées !`, type: 'success', visible: true}); 
                         } 
                     } catch (err) { setToast({message: "Erreur lecture Excel.", type: 'error', visible: true}); }
                 };
@@ -961,7 +919,7 @@
                     };
                 });
                 setData(processed);
-                // PAS DE SAUVEGARDE LOCALSTORAGE ICI COMME DEMANDÉ
+                // Pas de sauvegarde localStorage
             };
 
             const resetFilters = () => {
@@ -1030,44 +988,29 @@
                                 <h3 className="text-xs font-bold text-blue-300 uppercase mb-4 flex items-center gap-2 tracking-wider"><Icons.Filter className="w-4 h-4" /> Filtres</h3>
                                 <div className="space-y-5">
                                     <div className={isFiltering ? 'opacity-50 pointer-events-none' : ''}>
-                                        <label className="text-[10px] font-bold text-blue-200 uppercase mb-1.5 block tracking-wider opacity-80">Exercice</label>
-                                        <select value={yearFilter} onChange={e => handleFilterChange(setYearFilter, e.target.value)} className="w-full bg-blue-900/40 border border-blue-400/30 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-actemium-accent/50 hover:bg-blue-900/60 transition-colors cursor-pointer">
-                                            <option value="Tous">Tous</option>
-                                            {uniqueYears.map(y => <option key={y} value={y}>{y}</option>)}
-                                        </select>
+                                        <label className="text-[10px] font-bold text-blue-200 uppercase mb-1.5 block tracking-wider opacity-80">Année</label>
+                                        <div className="relative">
+                                            <select value={yearFilter} onChange={e => handleFilterChange(setYearFilter, e.target.value)} className="w-full bg-blue-900/40 border border-blue-400/30 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-actemium-accent/50 hover:bg-blue-900/60 transition-colors cursor-pointer appearance-none">
+                                                <option value="Tous">Tous</option>
+                                                {uniqueYears.map(y => <option key={y} value={y}>{y}</option>)}
+                                            </select>
+                                            <Icons.ChevronDown className="absolute right-2.5 top-3 w-4 h-4 pointer-events-none text-actemium-accent" />
+                                        </div>
                                     </div>
                                     <div className={isFiltering ? 'opacity-50 pointer-events-none' : ''}>
                                         <MultiSelect label="Responsables" options={uniqueResp} selected={respFilter} onChange={val => handleFilterChange(setRespFilter, val)} />
+                                    </div>
+                                    <div className={isFiltering ? 'opacity-50 pointer-events-none' : ''}>
                                         <MultiSelect label="Devis" options={uniqueDevis} selected={devisFilter} onChange={val => handleFilterChange(setDevisFilter, val)} />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* NOUVELLE SECTION DE SYNCHRONISATION */}
                         <div className="p-6 border-t border-blue-800/50 bg-blue-900/20">
-                            <div className="mb-4">
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-[10px] font-bold text-blue-300 uppercase tracking-wider">Synchronisation</span>
-                                    {syncStatus === 'loading' && <Icons.Loader className="w-3.5 h-3.5 text-actemium-accent animate-spin-slow"/>}
-                                    {syncStatus === 'success' && <Icons.Check className="w-3.5 h-3.5 text-green-400"/>}
-                                    {syncStatus === 'error' && <Icons.AlertTriangle className="w-3.5 h-3.5 text-red-400"/>}
-                                </div>
-                                <div className="bg-blue-900/40 rounded-lg p-3 border border-blue-400/20">
-                                    <p className="text-[10px] text-blue-300 mb-1">Dernière MàJ:</p>
-                                    <p className="text-xs font-bold text-white">{formatDate(lastSyncDate)}</p>
-                                    {syncStatus === 'error' && <p className="text-[10px] text-red-300 mt-1">Échec connexion.</p>}
-                                </div>
-                            </div>
-
-                            <button onClick={fetchOneDriveData} disabled={syncStatus === 'loading'} className="w-full bg-actemium-secondary hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl flex items-center justify-center gap-2 font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 border border-blue-400/20 mb-3">
-                                {syncStatus === 'loading' ? <Icons.Loader className="w-4 h-4 animate-spin"/> : <Icons.RefreshCw className="w-4 h-4"/>}
-                                {syncStatus === 'loading' ? 'En cours...' : 'Synchroniser'}
-                            </button>
-
                             <input type="file" ref={fileRef} className="hidden" accept=".csv,.xlsx,.xls" onChange={handleFileUpload} />
-                            <button onClick={() => fileRef.current.click()} className="w-full text-xs text-blue-300 hover:text-white underline flex items-center justify-center gap-2 transition-colors">
-                                <Icons.Upload className="w-3 h-3"/> Import Manuel (Secours)
+                            <button onClick={() => fileRef.current.click()} className="w-full bg-actemium-secondary hover:bg-blue-600 text-white py-3 rounded-xl flex items-center justify-center gap-3 font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 border border-blue-400/20">
+                                <Icons.Upload className="w-5 h-5"/> Importer Excel
                             </button>
                         </div>
                     </aside>
